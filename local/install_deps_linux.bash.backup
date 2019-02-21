@@ -15,12 +15,6 @@
 # limitations under the License.
 
 # Check for lsb_release command in $PATH
-
-# added by yuanqingzhu
-path_to_clusterfuzz=$(dirname $0)
-echo $path_to_clusterfuzz
-sleep 10m
-
 if ! which lsb_release > /dev/null; then
   echo "ERROR: lsb_release not found in \$PATH" >&2
   exit 1;
@@ -67,9 +61,7 @@ if [ "$distro_codename" != "rodete" ]; then
 
   export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
   echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | \
-      # modified by yuanqingzhu
-      # sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-      sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+      sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
       sudo apt-key add -
 
@@ -118,9 +110,6 @@ fi
 rm -rf ENV
 virtualenv ENV
 source ENV/bin/activate
-
-# added by yuanqingzhu, cause next lines require to access docker/ and src/ dirs, which are located under $path_to_clusterfuzz
-cd $path_to_clusterfuzz
 
 # Install needed python packages.
 pip install --upgrade pip
